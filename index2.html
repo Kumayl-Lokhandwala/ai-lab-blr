@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Lab</title>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Tailwind-like Utility Classes & Custom CSS -->
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap");
+
+      :root {
+        /* Standard Chartered inspired palette */
+        --sc-blue: #0c2340; /* Deep corporate blue */
+        --sc-green: #00a546; /* Vibrant SC green */
+        --sc-light-blue: #0072ce;
+        --bg-white: #ffffff;
+        --bg-gray: #f4f6f9;
+        --text-main: #333333;
+        --text-muted: #666666;
+        --border-color: #e2e8f0;
+        --font-sans: "Open Sans", -apple-system, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        color: var(--text-main);
+        background-color: var(--bg-white);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 20px 6%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--sc-blue);
+        letter-spacing: -0.5px;
+      }
+
+      .logo-mark {
+        width: 32px;
+        height: 32px;
+        background: conic-gradient(
+          from 90deg,
+          var(--sc-blue) 0%,
+          var(--sc-green) 100%
+        );
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-muted);
+        margin-left: 36px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--sc-green);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 0 6%;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gray) 0%,
+          var(--bg-white) 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-shape {
+        position: absolute;
+        right: -10%;
+        top: -10%;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 165, 70, 0.05) 0%,
+          rgba(12, 35, 64, 0.02) 70%
+        );
+        border-radius: 50%;
+        z-index: 0;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 850px;
+        padding-top: 80px;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: rgba(0, 165, 70, 0.1);
+        color: var(--sc-green);
+        border-left: 3px solid var(--sc-green);
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 24px;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.8rem, 5vw, 4.2rem);
+        line-height: 1.15;
+        font-weight: 800;
+        color: var(--sc-blue);
+        margin-bottom: 24px;
+        letter-spacing: -1px;
+      }
+
+      .hero h1 span {
+        color: var(--sc-green);
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        max-width: 700px;
+        margin-bottom: 40px;
+        line-height: 1.7;
+      }
+
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--sc-blue);
+        color: white;
+        padding: 18px 36px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .cta-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--sc-green);
+        transition: all 0.4s ease;
+        z-index: 0;
+      }
+
+      .cta-btn:hover::before {
+        left: 0;
+      }
+
+      .cta-btn span {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Sections */
+      section {
+        padding: 120px 6%;
+      }
+
+      .section-header {
+        margin-bottom: 64px;
+        max-width: 700px;
+      }
+
+      .section-header h2 {
+        font-size: 2.5rem;
+        color: var(--sc-blue);
+        font-weight: 800;
+        margin-bottom: 16px;
+        letter-spacing: -0.5px;
+      }
+
+      .section-header .divider {
+        height: 4px;
+        width: 60px;
+        background: var(--sc-green);
+        margin-bottom: 24px;
+      }
+
+      .section-header p {
+        font-size: 1.15rem;
+        color: var(--text-muted);
+      }
+
+      /* KPI Grid */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 32px;
+      }
+
+      .kpi-card {
+        background: var(--bg-white);
+        padding: 40px 32px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        border-top: 4px solid var(--sc-blue);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .kpi-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        border-top-color: var(--sc-green);
+      }
+
+      .kpi-value {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--sc-blue);
+        line-height: 1;
+        margin-bottom: 12px;
+      }
+
+      .kpi-value span {
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .kpi-label {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 12px;
+      }
+
+      .kpi-desc {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+      }
+
+      /* Architecture Visualizer */
+      .bg-dark {
+        background-color: var(--sc-blue);
+        color: white;
+      }
+
+      .bg-dark .section-header h2 {
+        color: white;
+      }
+
+      .bg-dark .section-header p {
+        color: #a0b2c6;
+      }
+
+      .arch-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .arch-text h3 {
+        font-size: 1.8rem;
+        margin-bottom: 24px;
+        font-weight: 700;
+      }
+
+      .arch-text p {
+        color: #a0b2c6;
+        font-size: 1.1rem;
+        margin-bottom: 24px;
+      }
+
+      .arch-diagram {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 40px;
+        position: relative;
+      }
+
+      .node {
+        background: white;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .node::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+      }
+
+      .node-hot::before {
+        background: var(--sc-green);
+      }
+      .node-cold::before {
+        background: var(--sc-light-blue);
+      }
+
+      .node-info h4 {
+        color: var(--sc-blue);
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+
+      .node-info p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .node-stat {
+        font-size: 2rem;
+        font-weight: 800;
+      }
+
+      .node-hot .node-stat {
+        color: var(--sc-green);
+      }
+      .node-cold .node-stat {
+        color: var(--sc-light-blue);
+      }
+
+      /* Model Capabilities Section */
+      .bg-gray-section {
+        background-color: var(--bg-gray);
+      }
+
+      .model-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 32px;
+      }
+
+      .model-card {
+        background: var(--bg-white);
+        border-radius: 8px;
+        padding: 32px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .model-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60px;
+        height: 60px;
+        background: rgba(0, 165, 70, 0.05);
+        border-bottom-left-radius: 100%;
+      }
+
+      .model-tier {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--sc-light-blue);
+        margin-bottom: 8px;
+      }
+
+      .model-card h3 {
+        font-size: 1.5rem;
+        color: var(--sc-blue);
+        margin-bottom: 20px;
+        font-weight: 800;
+      }
+
+      .metric-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .metric-row:last-child {
+        border-bottom: none;
+      }
+
+      .metric-label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .metric-data {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--sc-blue);
+      }
+
+      .metric-highlight {
+        color: var(--sc-green);
+      }
+
+      /* BOM Table */
+      .table-wrapper {
+        background: var(--bg-white);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+
+      th {
+        background: var(--bg-gray);
+        padding: 24px;
+        color: var(--sc-blue);
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      td {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-size: 1rem;
+      }
+
+      .col-cost {
+        text-align: right;
+        font-weight: 600;
+        font-family: monospace;
+        font-size: 1.1rem;
+      }
+
+      .row-total td {
+        background: var(--sc-blue);
+        color: white;
+        font-weight: 800;
+        font-size: 1.2rem;
+        border: none;
+      }
+
+      .row-total .col-cost {
+        color: var(--sc-green);
+      }
+
+      /* Budget Progress */
+      .budget-tracker {
+        margin-top: 40px;
+        background: var(--bg-gray);
+        padding: 32px;
+        border-radius: 8px;
+      }
+
+      .budget-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        font-weight: 700;
+        color: var(--sc-blue);
+      }
+
+      .progress-bar-bg {
+        width: 100%;
+        height: 16px;
+        background: #d1d5db;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .progress-bar-fill {
+        width: 0%; /* Animated via GSAP */
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--sc-light-blue) 0%,
+          var(--sc-green) 100%
+        );
+        border-radius: 8px;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--bg-gray);
+        padding: 40px 6%;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        border-top: 1px solid var(--border-color);
+      }
+
+      @media (max-width: 968px) {
+        .arch-wrapper {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          padding-top: 120px;
+          padding-bottom: 60px;
+        }
+        th,
+        td {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav-bar">
+      <div class="logo">
+        <div class="logo-mark"></div>
+        AI Lab
+      </div>
+      <div class="nav-links">
+        <a href="#overview">Capabilities</a>
+        <a href="#metrics">Models</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#investment">Investment</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-shape"></div>
+      <div class="hero-content">
+        <div class="badge gs-reveal">Phase 1: Deployment Blueprint</div>
+        <h1 class="gs-reveal">
+          Enterprise AI Lab<br />for <span>Secure Banking.</span>
+        </h1>
+        <p class="gs-reveal">
+          A fully air-gapped, high-performance research node leveraging
+          PowerInfer hybrid routing. Deliver 70B parameter reasoning with zero
+          data egress, zero API constraints, and exceptional capital efficiency.
+        </p>
+        <div class="gs-reveal">
+          <a href="#metrics" class="cta-btn">
+            <span>View Model Capabilities</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI Overview -->
+    <section id="overview">
+      <div class="section-header gs-fade-up">
+        <div class="divider"></div>
+        <h2>Operational Capabilities</h2>
+        <p>
+          Transforming commodity workstation hardware into an enterprise-grade
+          inference engine via intelligent mathematical routing.
+        </p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card gs-stagger">
+          <div class="kpi-value">14 <span>tok/s</span></div>
+          <div class="kpi-label">Decode Velocity (70B)</div>
+          <div class="kpi-desc">
+            Maintains fluid conversational output, generating text 2.5x faster
+            than standard CPU execution limits.
+          </div>
+        </div>
+
+        <div class="kpi-card gs-stagger">
+          <div class="kpi-value">256 <span>GB</span></div>
+          <div class="kpi-label">Context Memory Pool</div>
+          <div class="kpi-desc">
+            Immense ECC DDR5 capacity enables the ingestion of 500,000+ token
+            documents without OOM crashes.
+          </div>
+        </div>
+
+        <div class="kpi-card gs-stagger">
+          <div class="kpi-value" style="color: var(--sc-green)">₹3L</div>
+          <div class="kpi-label">Secured Budget Surplus</div>
+          <div class="kpi-desc">
+            Delivered significantly under the ₹10 Lakh cap, securing capital for
+            phase-2 multi-GPU scaling.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Model Capabilities & Metrics Section -->
+    <section id="metrics" class="bg-gray-section">
+      <div class="section-header gs-fade-up">
+        <div class="divider"></div>
+        <h2>Model Capabilities & Metrics</h2>
+        <p>
+          Performance benchmarks across various frontier open-weight models
+          executed securely on the PowerInfer hardware architecture.
+        </p>
+      </div>
+
+      <div class="model-grid">
+        <!-- Model Card 1 -->
+        <div class="model-card gs-card-stagger">
+          <div class="model-tier">Lightweight Fast-Inference</div>
+          <h3>Llama-3.1 8B</h3>
+          <div class="metric-row">
+            <span class="metric-label">Decode Speed</span>
+            <span class="metric-data metric-highlight">50 - 60+ tok/s</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Hardware Allocation</span>
+            <span class="metric-data">100% GPU VRAM</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Primary Use Case</span>
+            <span class="metric-data">Instant Email/Code Drafting</span>
+          </div>
+        </div>
+
+        <!-- Model Card 2 -->
+        <div class="model-card gs-card-stagger">
+          <div class="model-tier">Mid-Weight Analytical</div>
+          <h3>Qwen 2.5 Coder 32B</h3>
+          <div class="metric-row">
+            <span class="metric-label">Decode Speed</span>
+            <span class="metric-data metric-highlight">20 - 25 tok/s</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Hardware Allocation</span>
+            <span class="metric-data">60% GPU / 40% CPU</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Primary Use Case</span>
+            <span class="metric-data">Software Engineering</span>
+          </div>
+        </div>
+
+        <!-- Model Card 3 -->
+        <div class="model-card gs-card-stagger">
+          <div class="model-tier">Heavyweight Reasoning</div>
+          <h3>Llama-3.1 70B</h3>
+          <div class="metric-row">
+            <span class="metric-label">Decode Speed</span>
+            <span class="metric-data metric-highlight">11 - 14 tok/s</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Hardware Allocation</span>
+            <span class="metric-data">Hot: GPU / Cold: CPU</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Primary Use Case</span>
+            <span class="metric-data">Massive Doc RAG & Audit</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="bg-dark">
+      <div class="section-header gs-fade-up">
+        <div class="divider" style="background: white"></div>
+        <h2>The PowerInfer Paradigm</h2>
+        <p>
+          Bypassing traditional hardware bottlenecks through dynamic workload
+          routing.
+        </p>
+      </div>
+
+      <div class="arch-wrapper">
+        <div class="arch-text gs-fade-up">
+          <h3>Exploiting Neural Sparsity</h3>
+          <p>
+            Large Language Models exhibit a strict power-law distribution.
+            During any given query, roughly 20% of the neural weights perform
+            80% of the mathematical heavy lifting.
+          </p>
+          <p>
+            Rather than purchasing ₹30 Lakh enterprise GPU clusters to load the
+            entire model, this architecture surgically separates the workload,
+            delivering high-end copilot speeds within standard workstation
+            budgets.
+          </p>
+        </div>
+
+        <div class="arch-diagram">
+          <div class="node node-hot gs-slide-left">
+            <div class="node-info">
+              <h4>Hot Neurons (High Frequency)</h4>
+              <p>Pinned to dedicated NVIDIA RTX 4090 VRAM</p>
+            </div>
+            <div class="node-stat">~80%</div>
+          </div>
+
+          <div
+            style="
+              text-align: center;
+              margin: 16px 0;
+              color: rgba(255, 255, 255, 0.5);
+            "
+            class="gs-fade-up"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 5v14M19 12l-7 7-7-7" />
+            </svg>
+          </div>
+
+          <div class="node node-cold gs-slide-right">
+            <div class="node-info">
+              <h4>Cold Neurons (Low Frequency)</h4>
+              <p>Offloaded to massive Threadripper CPU RAM</p>
+            </div>
+            <div class="node-stat">~20%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOM Section -->
+    <section id="investment">
+      <div class="section-header gs-fade-up">
+        <div class="divider"></div>
+        <h2>Capital Procurement</h2>
+        <p>
+          A transparent breakdown of the hardware Bill of Materials (BOM)
+          required to establish the physical AI Lab environment in Bengaluru.
+        </p>
+      </div>
+
+      <div class="table-wrapper gs-fade-up">
+        <table>
+          <thead>
+            <tr>
+              <th>Hardware Subsystem</th>
+              <th>Specification</th>
+              <th>Architectural Role</th>
+              <th class="col-cost">Est. Cost (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="gs-table-row">
+              <td><strong>Processing (CPU)</strong></td>
+              <td>AMD Threadripper PRO 7955WX</td>
+              <td>Executes sparse cold neurons; 8-channel memory routing</td>
+              <td class="col-cost">₹ 1,60,000</td>
+            </tr>
+            <tr class="gs-table-row">
+              <td><strong>Mainboard</strong></td>
+              <td>ASUS Pro WS WRX90E-SAGE SE</td>
+              <td>High-lane PCIe 5.0 topology for rapid bus transfer</td>
+              <td class="col-cost">₹ 1,00,000</td>
+            </tr>
+            <tr class="gs-table-row">
+              <td><strong>System Memory</strong></td>
+              <td>256GB ECC DDR5 (8x 32GB)</td>
+              <td>Massive buffer for deep RAG contexts and cold weights</td>
+              <td class="col-cost">₹ 1,20,000</td>
+            </tr>
+            <tr class="gs-table-row">
+              <td><strong>Accelerator (GPU)</strong></td>
+              <td>1x NVIDIA RTX 4090 (24GB)</td>
+              <td>Dedicated VRAM for high-frequency matrix operations</td>
+              <td class="col-cost">₹ 1,90,000</td>
+            </tr>
+            <tr class="gs-table-row">
+              <td><strong>Storage Array</strong></td>
+              <td>4TB Gen 4.0 NVMe (RAID 0)</td>
+              <td>Sub-second model weight injection at startup</td>
+              <td class="col-cost">₹ 35,000</td>
+            </tr>
+            <tr class="gs-table-row">
+              <td><strong>Infrastructure</strong></td>
+              <td>1600W PSU, 3kVA UPS, Chassis</td>
+              <td>Clean power delivery and acoustic dampening</td>
+              <td class="col-cost">₹ 95,000</td>
+            </tr>
+            <tr class="row-total gs-table-row">
+              <td colspan="3" style="text-align: right">
+                Total Prototype CapEx
+              </td>
+              <td class="col-cost">₹ 7,00,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="budget-tracker gs-fade-up">
+        <div class="budget-meta">
+          <span>Allocated Utilization: ₹7.0 Lakhs</span>
+          <span>Approved Budget: ₹10.0 Lakhs</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="budgetFill"></div>
+        </div>
+        <div
+          style="
+            text-align: right;
+            margin-top: 12px;
+            font-weight: 700;
+            color: var(--sc-green);
+            font-size: 0.95rem;
+          "
+        >
+          30% Capital Surplus Successfully Secured
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Internal Innovation Proposal &bull; strictly confidential</p>
+    </footer>
+
+    <!-- GSAP Animation Scripts -->
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Initial Hero Animations
+      const heroTl = gsap.timeline();
+      heroTl
+        .from(".nav-bar", {
+          y: -100,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        })
+        .from(
+          ".gs-reveal",
+          {
+            y: 40,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power3.out",
+          },
+          "-=0.4",
+        )
+        .from(
+          ".hero-shape",
+          { scale: 0.8, opacity: 0, duration: 1.5, ease: "power2.out" },
+          "-=1",
+        );
+
+      // Fade Up Elements
+      gsap.utils.toArray(".gs-fade-up").forEach((element) => {
+        gsap.from(element, {
+          scrollTrigger: {
+            trigger: element,
+            start: "top 85%",
+          },
+          y: 40,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        });
+      });
+
+      // KPI Cards Stagger
+      gsap.from(".gs-stagger", {
+        scrollTrigger: {
+          trigger: ".kpi-grid",
+          start: "top 80%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: "power3.out",
+      });
+
+      // Model Cards Stagger
+      gsap.from(".gs-card-stagger", {
+        scrollTrigger: {
+          trigger: ".model-grid",
+          start: "top 80%",
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: "power3.out",
+      });
+
+      // Architecture Nodes
+      gsap.from(".gs-slide-left", {
+        scrollTrigger: {
+          trigger: ".arch-diagram",
+          start: "top 75%",
+        },
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      gsap.from(".gs-slide-right", {
+        scrollTrigger: {
+          trigger: ".arch-diagram",
+          start: "top 75%",
+        },
+        x: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: 0.2,
+      });
+
+      // Table Rows Stagger
+      gsap.from(".gs-table-row", {
+        scrollTrigger: {
+          trigger: ".table-wrapper",
+          start: "top 80%",
+        },
+        y: 20,
+        opacity: 0,
+        duration: 0.4,
+        stagger: 0.1,
+        ease: "power2.out",
+      });
+
+      // Budget Progress Bar Animation
+      gsap.to("#budgetFill", {
+        scrollTrigger: {
+          trigger: ".budget-tracker",
+          start: "top 85%",
+        },
+        width: "70%",
+        duration: 1.5,
+        ease: "power3.out",
+        delay: 0.3,
+      });
+    </script>
+  </body>
+</html>

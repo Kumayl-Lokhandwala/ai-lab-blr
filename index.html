@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Cleanroom | Enterprise AI Lab</title>
+    <style>
+      /* Reset & Custom Properties */
+      :root {
+        --primary: #0a192f;
+        --secondary: #112240;
+        --accent: #64ffda;
+        --accent-hover: #52e0c4;
+        --text-main: #ccd6f6;
+        --text-muted: #8892b0;
+        --bg-light: #f8fafc;
+        --card-bg: #ffffff;
+        --border: #e2e8f0;
+        --font-sans:
+          "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        color: var(--primary);
+        background-color: var(--bg-light);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Navigation - Glassmorphism */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 20px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .logo {
+        font-weight: 800;
+        font-size: 1.2rem;
+        letter-spacing: -0.5px;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--primary);
+        border-radius: 50%;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-muted);
+        margin-left: 32px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: var(--primary);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 10%;
+        background: var(--primary);
+        color: var(--text-main);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(100, 255, 218, 0.05) 0%,
+          rgba(10, 25, 47, 0) 70%
+        );
+        border-radius: 50%;
+        z-index: 0;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(100, 255, 218, 0.2);
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 5vw, 4.5rem);
+        line-height: 1.1;
+        font-weight: 800;
+        margin-bottom: 24px;
+        color: #ffffff;
+        letter-spacing: -1px;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        max-width: 600px;
+        margin-bottom: 40px;
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--accent);
+        color: var(--primary);
+        padding: 16px 32px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+
+      .cta-button:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+      }
+
+      /* Scroll animations */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Standard Section */
+      section {
+        padding: 100px 10%;
+      }
+
+      .section-header {
+        margin-bottom: 60px;
+        text-align: center;
+      }
+
+      .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin-bottom: 16px;
+      }
+
+      .section-header p {
+        color: #64748b;
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* KPI Grid */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+      }
+
+      .kpi-card {
+        background: var(--card-bg);
+        padding: 40px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+      }
+
+      .kpi-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      .kpi-value {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 8px;
+        line-height: 1;
+      }
+
+      .kpi-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .kpi-desc {
+        margin-top: 16px;
+        font-size: 0.9rem;
+        color: #94a3b8;
+      }
+
+      /* Architecture Visualizer */
+      .architecture-wrapper {
+        background: var(--primary);
+        border-radius: 24px;
+        padding: 60px;
+        color: white;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .arch-text h3 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      .arch-text p {
+        color: var(--text-muted);
+        margin-bottom: 24px;
+      }
+
+      .arch-diagram {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .node-box {
+        background: var(--secondary);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 24px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .node-hot {
+        border-left: 4px solid #ef4444;
+      }
+
+      .node-cold {
+        border-left: 4px solid #3b82f6;
+      }
+
+      .node-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+
+      .node-sub {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .node-metric {
+        font-size: 1.5rem;
+        font-weight: 800;
+      }
+
+      /* Table Section */
+      .table-container {
+        background: var(--card-bg);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+
+      th,
+      td {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        background: #f1f5f9;
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+
+      td {
+        font-size: 0.95rem;
+        color: #334155;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .cost-col {
+        text-align: right;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .total-row {
+        background: var(--primary);
+      }
+
+      .total-row td {
+        color: white;
+        font-weight: 800;
+        font-size: 1.1rem;
+      }
+
+      .total-row .cost-col {
+        color: var(--accent);
+      }
+
+      /* Budget Progress */
+      .budget-progress {
+        margin-top: 30px;
+        padding: 30px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #e2e8f0;
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 12px 0;
+      }
+
+      .progress-fill {
+        width: 70%;
+        height: 100%;
+        background: #10b981;
+        border-radius: 6px;
+      }
+
+      .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #64748b;
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .architecture-wrapper {
+          grid-template-columns: 1fr;
+          padding: 40px;
+        }
+        .hero {
+          padding: 120px 5% 60px;
+        }
+        section {
+          padding: 80px 5%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav>
+      <div class="logo">
+        <div class="logo-dot"></div>
+        Cleanroom AI
+      </div>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#investment">Investment</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-content reveal">
+        <div class="badge">Internal Deployment Blueprint</div>
+        <h1>Unleash Frontier AI<br />On-Premise.</h1>
+        <p>
+          A high-performance, air-gapped research node leveraging PowerInfer
+          hybrid routing. Deliver 70B parameter reasoning with zero API costs,
+          zero data egress, and a capital footprint entirely under budget.
+        </p>
+        <a href="#overview" class="cta-button">
+          Explore the Prototype
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- KPI Overview -->
+    <section id="overview">
+      <div class="section-header reveal">
+        <h2>Operational Capability</h2>
+        <p>
+          Transforming commodity workstation hardware into an enterprise-grade
+          inference engine via intelligent mathematical routing.
+        </p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card reveal">
+          <div class="kpi-value">
+            14<span style="font-size: 1.5rem; color: #94a3b8"> tok/s</span>
+          </div>
+          <div class="kpi-label">Decode Velocity (70B)</div>
+          <div class="kpi-desc">
+            Maintains fluid conversational output, generating text 2.5x faster
+            than pure CPU execution limits.
+          </div>
+        </div>
+        <div class="kpi-card reveal" style="transition-delay: 0.1s">
+          <div class="kpi-value">
+            256<span style="font-size: 1.5rem; color: #94a3b8"> GB</span>
+          </div>
+          <div class="kpi-label">Context Memory Pool</div>
+          <div class="kpi-desc">
+            Immense DDR5 capacity allows ingestion of 500,000+ token documents
+            without Out-Of-Memory crashes.
+          </div>
+        </div>
+        <div class="kpi-card reveal" style="transition-delay: 0.2s">
+          <div class="kpi-value" style="color: #10b981">₹3L</div>
+          <div class="kpi-label">Budget Surplus</div>
+          <div class="kpi-desc">
+            Delivered significantly under the ₹10 Lakh cap, securing capital for
+            phase-2 multi-GPU scaling.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Visualizer -->
+    <section id="architecture">
+      <div class="architecture-wrapper reveal">
+        <div class="arch-text">
+          <h3>The PowerInfer Paradigm</h3>
+          <p>
+            Large Language Models exhibit a strict power-law distribution.
+            During any given query, roughly 20% of the neural weights perform
+            80% of the mathematical heavy lifting.
+          </p>
+          <p>
+            Rather than purchasing ₹30 Lakh enterprise GPU clusters to load the
+            entire model, this architecture surgically separates the workload.
+          </p>
+        </div>
+
+        <div class="arch-diagram">
+          <div class="node-box node-hot">
+            <div>
+              <div class="node-title">Hot Neurons (High Frequency)</div>
+              <div class="node-sub">Pinned to NVIDIA RTX 4090 VRAM</div>
+            </div>
+            <div class="node-metric" style="color: #ef4444">~80%</div>
+          </div>
+
+          <div style="text-align: center; color: var(--text-muted)">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </div>
+
+          <div class="node-box node-cold">
+            <div>
+              <div class="node-title">Cold Neurons (Low Frequency)</div>
+              <div class="node-sub">Offloaded to Threadripper System RAM</div>
+            </div>
+            <div class="node-metric" style="color: #3b82f6">~20%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bill of Materials -->
+    <section id="investment">
+      <div class="section-header reveal">
+        <h2>Procurement Strategy</h2>
+        <p>
+          A transparent breakdown of the hardware bill of materials required to
+          establish the physical lab environment.
+        </p>
+      </div>
+
+      <div class="table-container reveal">
+        <table>
+          <thead>
+            <tr>
+              <th>Hardware Subsystem</th>
+              <th>Specification</th>
+              <th>Architectural Role</th>
+              <th class="cost-col">Cost (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Processing (CPU)</strong></td>
+              <td>AMD Threadripper PRO 7955WX</td>
+              <td>Executes sparse cold neurons; 8-channel memory</td>
+              <td class="cost-col">₹ 1,60,000</td>
+            </tr>
+            <tr>
+              <td><strong>Mainboard</strong></td>
+              <td>ASUS Pro WS WRX90E-SAGE SE</td>
+              <td>High-lane PCIe 5.0 routing backbone</td>
+              <td class="cost-col">₹ 1,00,000</td>
+            </tr>
+            <tr>
+              <td><strong>System Memory</strong></td>
+              <td>256GB ECC DDR5 (8x 32GB)</td>
+              <td>Massive buffer for deep RAG context windows</td>
+              <td class="cost-col">₹ 1,20,000</td>
+            </tr>
+            <tr>
+              <td><strong>Accelerator (GPU)</strong></td>
+              <td>1x NVIDIA RTX 4090 (24GB)</td>
+              <td>Dedicated VRAM for high-frequency matrix logic</td>
+              <td class="cost-col">₹ 1,90,000</td>
+            </tr>
+            <tr>
+              <td><strong>Storage Array</strong></td>
+              <td>4TB Gen 4.0 NVMe (RAID 0)</td>
+              <td>Sub-second model weight injection</td>
+              <td class="cost-col">₹ 35,000</td>
+            </tr>
+            <tr>
+              <td><strong>Infrastructure</strong></td>
+              <td>1600W PSU, 3kVA UPS, Chassis</td>
+              <td>Clean power delivery and acoustic dampening</td>
+              <td class="cost-col">₹ 95,000</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3" style="text-align: right">
+                Total Prototype CapEx
+              </td>
+              <td class="cost-col">₹ 7,00,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="budget-progress reveal">
+        <div class="progress-labels">
+          <span>Allocated Spend: ₹7.0 Lakhs</span>
+          <span>Approved Budget: ₹10.0 Lakhs</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <div
+          style="
+            text-align: right;
+            font-size: 0.85rem;
+            color: #10b981;
+            font-weight: 600;
+          "
+        >
+          30% Capital Surplus Secured
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Intersection Observer for scroll animations
+      document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.15,
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll(".reveal").forEach((element) => {
+          observer.observe(element);
+        });
+      });
+    </script>
+  </body>
+</html>
