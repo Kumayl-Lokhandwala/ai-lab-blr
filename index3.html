@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Lab</title>
+    <title>SCB AI Lab</title>
 
     <!-- GSAP & ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -20,19 +20,15 @@
     <style>
       :root {
         /* Official Standard Chartered Brand Palette */
-        --sc-deep-blue: #01265a; /* Primary Corporate Blue */
-        --sc-green: #00a546; /* Trustmark Green */
-        --sc-light-blue: #0076d6; /* Digital Secondary Blue */
-        --sc-teal: #00a499; /* Secondary Accent */
-
+        --sc-deep-blue: #01265a;
+        --sc-green: #00a546;
+        --sc-light-blue: #0076d6;
         --bg-white: #ffffff;
         --bg-gray: #f4f7f9;
         --bg-dark-gray: #e8edf2;
-
         --text-main: #333333;
         --text-muted: #555555;
         --border-color: #dde2e8;
-
         --font-corporate: "Open Sans", -apple-system, sans-serif;
       }
 
@@ -61,13 +57,12 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: var(--bg-white);
+        background: rgba(255, 255, 255, 0.98);
         box-shadow: 0 2px 15px rgba(1, 38, 90, 0.08);
         z-index: 1000;
         transition: all 0.3s ease;
       }
 
-      /* SCB Inspired Trustmark Logo */
       .logo-container {
         display: flex;
         align-items: center;
@@ -130,7 +125,6 @@
         color: var(--text-main);
         font-weight: 600;
         font-size: 0.95rem;
-        transition: color 0.2s ease;
         position: relative;
       }
 
@@ -250,7 +244,7 @@
 
       .section-header {
         margin-bottom: 56px;
-        max-width: 700px;
+        max-width: 800px;
       }
 
       .section-header h2 {
@@ -311,7 +305,6 @@
       .kpi-value strong {
         font-weight: 700;
       }
-
       .kpi-value span {
         font-size: 1.1rem;
         color: var(--sc-light-blue);
@@ -392,14 +385,13 @@
         font-size: 0.9rem;
         color: var(--text-muted);
       }
-
       .metric-data {
         font-size: 1rem;
         font-weight: 600;
         color: var(--sc-deep-blue);
       }
 
-      /* Architecture Visualizer */
+      /* Architecture Visualizer Enhancements */
       .arch-wrapper {
         display: grid;
         grid-template-columns: 1fr 1.2fr;
@@ -417,7 +409,6 @@
       .arch-text h3 strong {
         font-weight: 700;
       }
-
       .arch-text p {
         font-size: 1.05rem;
         color: var(--text-muted);
@@ -440,10 +431,7 @@
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-      }
-
-      .arch-node:last-child {
-        margin-bottom: 0;
+        position: relative;
       }
 
       .node-hot {
@@ -451,6 +439,38 @@
       }
       .node-cold {
         border-left: 4px solid var(--sc-light-blue);
+      }
+
+      /* Continuous pulsing animation for active states */
+      @keyframes pulse-border-hot {
+        0% {
+          box-shadow: 0 0 0 0 rgba(0, 165, 70, 0.2);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(0, 165, 70, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(0, 165, 70, 0);
+        }
+      }
+
+      @keyframes pulse-border-cold {
+        0% {
+          box-shadow: 0 0 0 0 rgba(0, 118, 214, 0.2);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(0, 118, 214, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(0, 118, 214, 0);
+        }
+      }
+
+      .node-hot:hover {
+        animation: pulse-border-hot 1.5s infinite;
+      }
+      .node-cold:hover {
+        animation: pulse-border-cold 1.5s infinite;
       }
 
       .node-info h4 {
@@ -464,7 +484,6 @@
         color: var(--text-muted);
         font-size: 0.9rem;
       }
-
       .node-stat {
         font-size: 2rem;
         font-weight: 300;
@@ -472,9 +491,91 @@
 
       .node-hot .node-stat {
         color: var(--sc-green);
+        font-weight: 700;
       }
       .node-cold .node-stat {
         color: var(--sc-light-blue);
+        font-weight: 700;
+      }
+
+      /* Detailed "How it Works" Step-by-Step Section */
+      .how-it-works {
+        margin-top: 60px;
+      }
+
+      .how-it-works h3 {
+        font-size: 1.6rem;
+        color: var(--sc-deep-blue);
+        margin-bottom: 32px;
+        font-weight: 300;
+        text-align: center;
+      }
+
+      .how-it-works h3 strong {
+        font-weight: 700;
+      }
+
+      .step-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        position: relative;
+      }
+
+      /* Connecting line behind steps */
+      .step-container::before {
+        content: "";
+        position: absolute;
+        top: 30px;
+        left: 5%;
+        width: 90%;
+        height: 2px;
+        background: var(--border-color);
+        z-index: 0;
+      }
+
+      .step-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+        padding: 32px 24px;
+        border-radius: 4px;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .step-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .step-number {
+        width: 50px;
+        height: 50px;
+        background: var(--sc-deep-blue);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin: 0 auto 20px auto;
+        border: 4px solid var(--bg-white);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .step-card h4 {
+        color: var(--sc-deep-blue);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .step-card p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
       }
 
       /* BOM Table */
@@ -507,10 +608,6 @@
         border-bottom: 1px solid var(--border-color);
         color: var(--text-main);
         font-size: 0.95rem;
-      }
-
-      tr:last-child td {
-        border-bottom: none;
       }
 
       .col-cost {
@@ -576,9 +673,12 @@
           grid-template-columns: 1fr;
           gap: 40px;
         }
+        .step-container::before {
+          display: none;
+        }
         .nav-links {
           display: none;
-        } /* Simplified mobile for prototype */
+        }
         .hero h1 {
           font-size: 2.2rem;
         }
@@ -598,7 +698,7 @@
       <div class="nav-links">
         <a href="#overview">Capabilities</a>
         <a href="#metrics">Models</a>
-        <a href="#architecture">Architecture</a>
+        <a href="#architecture">Architecture Details</a>
         <a href="#investment">Investment</a>
       </div>
     </nav>
@@ -736,17 +836,18 @@
       </div>
     </section>
 
-    <!-- Architecture Visualizer -->
+    <!-- Deep Dive Architecture Visualizer -->
     <section id="architecture">
       <div class="section-header gs-fade-up">
         <div class="divider"></div>
         <h2>The <strong>PowerInfer</strong> Paradigm</h2>
         <p>
-          Bypassing traditional hardware bottlenecks through dynamic workload
-          routing.
+          Demystifying how we bypass traditional hardware bottlenecks through
+          dynamic workload routing.
         </p>
       </div>
 
+      <!-- High-level Split -->
       <div class="arch-wrapper">
         <div class="arch-text gs-fade-up">
           <h3>Exploiting <strong>Neural Sparsity</strong></h3>
@@ -764,7 +865,10 @@
         </div>
 
         <div class="arch-diagram">
-          <div class="arch-node node-hot gs-slide-left">
+          <div
+            class="arch-node node-hot gs-slide-left"
+            title="Hover to view active processing"
+          >
             <div class="node-info">
               <h4>Hot Neurons (High Frequency)</h4>
               <p>Pinned to dedicated NVIDIA RTX 4090 VRAM</p>
@@ -788,12 +892,60 @@
             </svg>
           </div>
 
-          <div class="arch-node node-cold gs-slide-right">
+          <div
+            class="arch-node node-cold gs-slide-right"
+            title="Hover to view active processing"
+          >
             <div class="node-info">
               <h4>Cold Neurons (Low Frequency)</h4>
               <p>Offloaded to massive Threadripper CPU RAM</p>
             </div>
             <div class="node-stat"><strong>~20%</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step-by-Step Educational Breakdown -->
+      <div class="how-it-works">
+        <h3 class="gs-fade-up">
+          How it Works: <strong>Step-by-Step Execution</strong>
+        </h3>
+
+        <div class="step-container">
+          <!-- Step 1 -->
+          <div class="step-card gs-step-stagger">
+            <div class="step-number">01</div>
+            <h4>The Adaptive Predictor</h4>
+            <p>
+              Like a highly efficient traffic controller, the system analyzes
+              the incoming prompt instantly. It mathematically predicts exactly
+              which "neurons" of the AI model will be needed to answer the
+              query, before any heavy computation begins.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card gs-step-stagger">
+            <div class="step-number">02</div>
+            <h4>Intelligent Routing</h4>
+            <p>
+              The system splits the workload. The ~80% of neurons that activate
+              constantly ("Hot") are routed to the lightning-fast GPU. The
+              massive, rarely-used knowledge base ("Cold") is assigned to the
+              high-capacity CPU.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card gs-step-stagger">
+            <div class="step-number">03</div>
+            <h4>Synchronized Assembly</h4>
+            <p>
+              Both processors work in parallel. The CPU computes its fragments
+              and sends them over the motherboard's high-speed PCIe bus to the
+              GPU, which seamlessly stitches everything together to output the
+              final word in milliseconds.
+            </p>
           </div>
         </div>
       </div>
@@ -956,7 +1108,7 @@
         ease: "power2.out",
       });
 
-      // Architecture Nodes
+      // Architecture Nodes (Diagram)
       gsap.from(".gs-slide-left", {
         scrollTrigger: {
           trigger: ".arch-diagram",
@@ -978,6 +1130,19 @@
         duration: 0.8,
         ease: "power3.out",
         delay: 0.2,
+      });
+
+      // Architecture Steps Stagger
+      gsap.from(".gs-step-stagger", {
+        scrollTrigger: {
+          trigger: ".step-container",
+          start: "top 80%",
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.2,
+        ease: "power2.out",
       });
 
       // Table Rows Stagger
